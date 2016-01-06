@@ -1,0 +1,14 @@
+upstream glances_public {
+         server api1.p:9292;
+         server api2.p:9292;
+}
+
+upstream glances_internal {
+         server api1.p:9292;
+         server api2.p:9292;
+}
+
+upstream glances_admin {
+         server api1.p:9292;
+         server api2.p:9292;
+}

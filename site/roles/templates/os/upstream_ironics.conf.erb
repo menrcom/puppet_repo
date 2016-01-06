@@ -1,0 +1,14 @@
+upstream ironics_public {
+         server ironic1.p:6385;
+         server ironic2.p:6385;
+}
+
+upstream ironics_internal {
+         server ironic1.p:6385;
+         server ironic2.p:6385;
+}
+
+upstream ironics_admin {
+         server ironic1.p:6385;
+         server ironic2.p:6385;
+}

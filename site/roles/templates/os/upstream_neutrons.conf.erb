@@ -1,0 +1,14 @@
+upstream neutrons_public {
+         server api1.p:9696;
+         server api2.p:9696;
+}
+
+upstream neutrons_internal {
+         server api1.p:9696;
+         server api2.p:9696;
+}
+
+upstream neutrons_admin {
+         server api1.p:9696;
+         server api2.p:9696;
+}

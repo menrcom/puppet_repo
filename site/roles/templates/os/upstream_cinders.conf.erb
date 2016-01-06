@@ -1,0 +1,14 @@
+upstream cinders_public {
+         server api1.p:8776;
+         server api2.p:8776;
+}
+
+upstream cinders_internal {
+         server api1.p:8776;
+         server api2.p:8776;
+}
+
+upstream cinders_admin {
+         server api1.p:8776;
+         server api2.p:8776;
+}

@@ -1,0 +1,12 @@
+---
+:backends:
+  - yaml
+:hierarchy:
+  - defaults
+  - "nodes/%{::fqdn}"
+  - "nodes/%{::hostname}"
+  - common
+
+:yaml:
+  :datadir: "/etc/puppet/environments/%{::environment}/hiera"
+:merge_behavior: deeper

@@ -1,0 +1,301 @@
+roles:
+  - roles::common
+puppet::agent::puppet_server: 'puppetmaster.vagrant'
+puppet::agent::
+ntp::restrict:
+  - restrict default kod nomodify notrap nopeer noquery
+  - restrict -6 default kod nomodify notrap nopeer noquery
+  - restrict 127.0.0.1
+  - restrict -6 ::1
+ntp::service_ensure: running
+ntp::service_enable: true
+ntp::servers:
+  - 0.pool.ntp.org iburst burst
+  - 1.pool.ntp.org iburst burst
+  - 2.pool.ntp.org iburst burst
+  - 3.pool.ntp.org iburst burst
+
+apt::sources:
+  cloudarchive:
+    location: 'http://ubuntu-cloud.archive.canonical.com/ubuntu'
+    release:  'trusty-updates/kilo'
+    repos:    'main'
+    pin:      '700'
+    include:
+      deb:    true
+      src:    false
+      
+# MEMCACHE:
+memcache::listen_ip:      '0.0.0.0'
+memcache::tcp_port:       '11211'
+memcache::udp_port:       '11211'
+
+# RABBIT:
+rabbitmq::rabbitmq_class: 'rabbitmq'
+
+# MYSQL:
+mysql::server::restart:            true
+mysql::server::create_root_my_cnf: true
+mysql::server::root_password:      '[thgjl,th`im'
+mysql::server::override_options:
+  mysqld:
+    bind-address:                  '0.0.0.0'
+
+# KEYSTONE:
+keystone::admin_token:           "[thgjl,th`im"
+keystone::package_ensure:        'latest'
+keystone::client_package_ensure: 'latest'
+
+# GLANCE:
+glance::package_ensure:          latest
+glance::api::purge_config:       true
+glance::api::validate:           true
+glance::registry::purge_config:  true
+glance::registry::sync_db:       true
+# # Workaround against hardcoded obsolete parameters.
+# # Remove for kilo and upper releases:
+# glance::api::auth_host:      'auth1.vagrant'
+# glance::registry::auth_host: 'auth1.vagrant'
+
+# HORIZON
+horizon::package_ensure:    latest
+horizon::cache_server_ip:   'db1.vagrant'
+horizon::cache_server_port: '11211'
+horizon::secret_key:        'ijfnru8udjm'
+horizon::swift:             false
+horizon::allowed_hosts:     '*'
+horizon::server_aliases:
+  - $::fqdn
+  - $::hostname
+  - horizon
+horizon::compress_offline: false
+horizon::hypervisor_options:
+  can_set_password:        true
+horizon::cinder_options:
+  enable_backup:           true
+
+# NOVA:
+nova::ensure_package: 'latest'
+nova::glance_api_servers:
+  - api1.vagrant:9292
+nova::memcached_servers:
+  - db1.vagrant
+nova::rabbit_host:   'db1.vagrant'
+nova::nova_user_id:   666
+nova::nova_group_id:  666
+nova::nova_public_key:
+  type:               'ecdsa-sha2-nistp256'
+  key:                'AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLtVa5XP/prVtJMIFeP6jbGW+uF+lxYKfFABEcNy4/AB3V3gc8qw7hIdLHs/yzbi/3Z96+zzfbmfKSOeJAJyuSY='
+nova::nova_private_key:
+  type:               'ssh-ecdsa'
+  key:                |
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEIJB548BDsCQxIZcEKYyRP2bu0O0iSEHR9cRkeZcggitJoAoGCCqGSM49
+    AwEHoUQDQgAEu1Vrlc/+mtW0kwgV4/qNsZb64X6XFgp8UAERw3Lj8AHdXeBzyrDu
+    Eh0sez/LNuL/dn3r7PN9uZ8pI54kAnK5Jg==
+    -----END EC PRIVATE KEY-----
+nova::install_utilities:                    false
+nova::notify_on_state_change:               'vm_and_task_state'
+# nova::api::auth_host:                       'auth1.vagrant'
+# nova::api::auth_port:                       5000
+# nova::api::auth_protocol:                   'http'
+nova::api::metadata_listen:                 "%{::ipaddress}"
+nova::compute::virtio_nic:                  true
+nova::compute::neutron_enabled:             false
+nova::compute::instance_usage_audit:        true
+nova::compute::instance_usage_audit_period: 'day'
+nova::compute::vnc_enabled:                 true
+nova::compute::libvirt::vncserver_listen:   '0.0.0.0'
+nova::compute::vncserver_proxyclient_address:    "%{::ipaddress}"
+nova::compute::libvirt::libvirt_inject_password: true
+nova::compute::libvirt::libvirt_inject_key: true
+nova::compute::libvirt::migration_support:  true
+nova::network::create_networks:             false
+nova::network::floating_range:              '192.168.121.32/27'
+nova::network::fixed_range:                 '192.168.122.0/26'
+nova::network::allowed_start:               '192.168.122.32'
+nova::network::allowed_end:                 '192.168.122.62'
+nova::network::config_overrides:
+  flat_network_bridge:                      flatbr0
+nova::network::public_interface:            eth0
+nova::network::private_interface:           eth1
+nova::vncproxy::enabled:                    true
+nova::vncproxy::common::vncproxy_host:      '192.168.121.15'
+nova::vncproxy::common::vncproxy_protocol:  'http'
+nova::vncproxy::common::vncproxy_port:      6080
+nova::vncproxy::common::vncproxy_path:      '/vnc_auto.html'
+nova::spicehtml5proxy::enabled:             false
+nova::rabbitmq::enabled: true
+
+# CINDER:
+cinder::package_ensure:           latest
+cinder::rabbitmq::enabled:        false
+cinder::rabbitmq::rabbitmq_class: false
+cinder::api::validate:            true
+
+
+# HEAT:
+heat::package_ensure:                    latest
+heat::keystone::domain::domain_admin:    'Openstack Admin Team'
+heat::keystone::domain::domain_email:    'admin@example.com'
+heat::keystone::domain::domain_password: 'heatpassword'
+heat::rabbit_host:                       'db1.vagrant'
+heat::rabbit_password:                   'guest'
+heat::engine::auth_encryption_key:       'sd5c48s3zc48d3x2'
+
+
+# NEUTRON:
+neutron::package_ensure:  latest
+neutron::rabbit_host:     db1.vagrant
+neutron::rabbit_password: guest
+
+
+# KEYSTONE REQUISITES:
+openstack::region: 'vagrant'
+openstack::keystone::admin::email:    'me@example.com'
+openstack::keystone::admin::password: '[thgjl,th`im'
+openstack::glance::service:  'glance'
+openstack::glance::tenant:   'services'
+openstack::glance::user:     'glance_user'
+openstack::glance::password: 'glancepassword'
+openstack::nova::service:    'nova'
+openstack::nova::user:       'nova_user'
+openstack::nova::tenant:     'services'
+openstack::nova::password:   'novapassword'
+openstack::cinder::service:  'cinder'
+openstack::cinder::user:     'cinder_user'
+openstack::cinder::tenant:   'services'
+openstack::cinder::password: 'cinderpassword'
+openstack::heat::service:    'heat'
+openstack::heat::user:       'heat_user'
+openstack::heat::tenant:     'services'
+openstack::heat::password:   'heatpassword'
+openstack::neutron::service:  'neutron'
+openstack::neutron::user:     'neutron_user'
+openstack::neutron::tenant:   'services'
+openstack::neutron::password: 'neutronpassword'
+
+
+# ENDPOINTS:
+openstack::endpoints:
+  keystone:
+    public_url:   "http://auth1.vagrant:5000"
+    admin_url:    "http://auth1.vagrant:35357"
+    internal_url: "http://auth1.vagrant:5000"
+  glance:
+    public_url:   "http://api1.vagrant:9292"
+    admin_url:    "http://api1.vagrant:9292"
+    internal_url: "http://api1.vagrant:9292"
+  nova:
+    public_url:   "http://api1.vagrant:8774"
+    admin_url:    "http://api1.vagrant:8774"
+    internal_url: "http://api1.vagrant:8774"
+  cinder:
+    public_url:   "http://api1.vagrant:8776"
+    admin_url:    "http://api1.vagrant:8776"
+    internal_url: "http://api1.vagrant:8776"
+  heat:
+    public_url:   "http://api1.vagrant:8004"
+    admin_url:    "http://api1.vagrant:8004"
+    internal_url: "http://api1.vagrant:8004"
+    metadata_url: "http://api1.vagrant:8000"
+    waitcondition_url: "http://api1.vagrant:8000/v1/waitcondition"
+    watch_url:    "http://api1.vagrant:8003"
+  neutron:
+    public_url:   "http://api1.vagrant:9696"
+    admin_url:    "http://api1.vagrant:9696"
+    internal_url: "http://api1.vagrant:9696"
+
+# DATABASE REQUISITES:
+openstack::keystone::db::host: "db1.vagrant"
+openstack::keystone::db::user: "user_keystone"
+openstack::keystone::db::pass: "[thgjl,th`im"
+openstack::keystone::db::name: "db_keystone"
+openstack::keystone::db::allow:
+  - auth1.vagrant
+  - 192.168.122.130
+  - localhost
+openstack::glance::db::host:   "db1.vagrant"
+openstack::glance::db::user:   "user_glance"
+openstack::glance::db::pass:   "glancepassword"
+openstack::glance::db::name:   "db_glance"
+openstack::glance::db::allow:
+  - api1.vagrant
+  - 192.168.122.131
+  - localhost
+openstack::nova::db::host:   "db1.vagrant"
+openstack::nova::db::user:   "user_nova"
+openstack::nova::db::pass:   "novapassword"
+openstack::nova::db::name:   "db_nova"
+openstack::nova::db::allow:
+  - compute1.vagrant
+  - 192.168.122.134
+  - compute2.vagrant
+  - 192.168.122.135
+  - compute3.vagrant
+  - 192.168.122.136
+  - compute4.vagrant
+  - 192.168.122.137
+  - api1.vagrant
+  - 192.168.122.131
+  - localhost
+openstack::cinder::db::host:   "db1.vagrant"
+openstack::cinder::db::user:   "user_cinder"
+openstack::cinder::db::pass:   "cinderpassword"
+openstack::cinder::db::name:   "db_cinder"
+openstack::cinder::db::allow:
+  - api1.vagrant
+  - 192.168.122.131
+  - compute1.vagrant
+  - 192.168.122.134
+  - compute2.vagrant
+  - 192.168.122.135
+  - compute3.vagrant
+  - 192.168.122.136
+  - compute4.vagrant
+  - 192.168.122.137
+  - localhost
+openstack::heat::db::host: "db1.vagrant"
+openstack::heat::db::user: "user_heat"
+openstack::heat::db::pass: "heatpassword"
+openstack::heat::db::name: "db_heat"
+openstack::heat::db::allow:
+  - api1.vagrant
+  - 192.168.122.131
+  - localhost
+openstack::neutron::db::host: "db1.vagrant"
+openstack::neutron::db::user: "user_neutron"
+openstack::neutron::db::pass: "neutronpassword"
+openstack::neutron::db::name: "db_neutron"
+openstack::neutron::db::allow:
+  - api1.vagrant
+  - 192.168.122.131
+  - localhost
+
+
+openstack::cinder::mq::pass:  'guest'
+openstack::cinder::mq::user:  'guest'
+openstack::cinder::mq::host:  'db1.vagrant'
+openstack::cinder::mq::port:  '5672'
+openstack::cinder::mq::vhost: '/'
+openstack::cinder::glance_api_servers:
+  - api1.vagrant:9292
+
+
+# OTHER PARAMETERS
+openstack::nova::live_migration_flag:  'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_TUNNELLED'
+openstack::nova::block_migration_flag: 'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_TUNNELLED,VIR_MIGRATE_NON_SHARED_INC'
+openstack::nova::images_type:          raw
+openstack::nova::images_volume_group:  virtual-volumes
+
+# NAMESERVER
+openstack::nameserver::listen:
+  - "%{::ipaddress}"
+  - "127.0.0.1"
+openstack::nameserver::allow_query:
+  - '192.168.121.0/23'
+  - '127.0.0.1'
+openstack::nameserver::zones:
+  'vagrant':
+    - 'type master'
+    - 'file vagrant'

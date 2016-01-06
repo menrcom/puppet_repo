@@ -1,0 +1,14 @@
+upstream keystones_public {
+         server api1.p:5000;
+         server api2.p:5000;
+}
+
+upstream keystones_internal {
+         server api1.p:5000;
+         server api2.p:5000;
+}
+
+upstream keystones_admin {
+         server api1.p:35357;
+         server api2.p:35357;
+}

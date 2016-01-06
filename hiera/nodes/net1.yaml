@@ -1,0 +1,2 @@
+roles:
+  - openstack::role::network

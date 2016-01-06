@@ -1,0 +1,14 @@
+upstream heats_public {
+         server api1.p:8004;
+         server api2.p:8004;
+}
+
+upstream heats_internal {
+         server api1.p:8004;
+         server api2.p:8004;
+}
+
+upstream heats_admin {
+         server api1.p:8004;
+         server api2.p:8004;
+}

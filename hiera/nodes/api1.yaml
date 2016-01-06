@@ -1,0 +1,8 @@
+roles:
+  - roles::os::glance::api
+  - roles::os::nova::api
+  - roles::os::nova::scheduler
+  - roles::os::cinder::api
+  - roles::os::heat::api
+  - roles::os::heat::engine
+

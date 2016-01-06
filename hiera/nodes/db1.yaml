@@ -1,0 +1,10 @@
+roles:
+  - roles::os::horizon::memcache
+  - roles::os::keystone::db-master
+  - roles::os::glance::db-master
+  - roles::os::cinder::db-master
+  - roles::os::heat::db-master
+  - roles::os::nova::db-master
+  - roles::os::nova::conductor
+  - roles::os::nova::rabbit
+  - roles::os::cinder::rabbit

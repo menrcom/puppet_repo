@@ -1,0 +1,47 @@
+roles:
+  - roles::os::nova::api
+  - roles::os::nova::scheduler
+  - roles::os::keystone::api
+  - roles::os::glance::keystone
+  - roles::os::nova::keystone
+  - roles::os::horizon::memcache
+  - roles::os::keystone::db-master
+  - roles::os::glance::db-master
+  - roles::os::nova::db-master
+  - roles::os::nova::rabbit
+  - roles::os::nova::conductor
+  - roles::os::horizon::application
+horizon::cache_server_ip:   'api2.vagrant'
+nova::glance_api_servers:
+  - compute5.vagrant:9292
+nova::memcached_servers:
+  - api2.vagrant
+nova::rabbit_host:   'api2.vagrant'
+# ENDPOINTS:
+openstack::endpoints:
+  keystone:
+    public_url:   "http://api2.vagrant:5000"
+    admin_url:    "http://api2.vagrant:35357"
+    internal_url: "http://api2.vagrant:5000"
+  glance:
+    public_url:   "http://compute5.vagrant:9292"
+    admin_url:    "http://compute5.vagrant:9292"
+    internal_url: "http://compute5.vagrant:9292"
+  nova:
+    public_url:   "http://api2.vagrant:8774"
+    admin_url:    "http://api2.vagrant:8774"
+    internal_url: "http://api2.vagrant:8774"
+  cinder:
+    public_url:   "http://api2.vagrant:8776"
+    admin_url:    "http://api2.vagrant:8776"
+    internal_url: "http://api2.vagrant:8776"
+openstack::keystone::db::host: "api2.vagrant"
+openstack::glance::db::host:   "api2.vagrant"
+openstack::glance::db::allow:
+  - 192.168.122.134
+  - compute5.vagrant
+openstack::nova::db::host:   "api2.vagrant"
+openstack::cinder::db::host:   "api2.vagrant"
+openstack::cinder::mq::host:  'api2.vagrant'
+openstack::cinder::glance_api_servers:
+  - compute5.vagrant:9292

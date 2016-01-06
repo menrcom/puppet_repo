@@ -1,0 +1,7 @@
+roles:
+  - roles::os::keystone::api
+  - roles::os::glance::keystone
+  - roles::os::nova::keystone
+  - roles::os::cinder::keystone
+  - roles::os::heat::keystone
+

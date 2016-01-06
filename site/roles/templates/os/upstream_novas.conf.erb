@@ -1,0 +1,14 @@
+upstream novas_public {
+         server api1.p:8774;
+         server api2.p:8774;
+}
+
+upstream novas_internal {
+         server api1.p:8774;
+         server api2.p:8774;
+}
+
+upstream novas_admin {
+         server api1.p:8774;
+         server api2.p:8774;
+}

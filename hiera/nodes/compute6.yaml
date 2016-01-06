@@ -1,0 +1,9 @@
+roles:
+  - roles::os::nova::compute::kvm
+openstack::nova::db::host:   "db1.vagrant"
+nova::rabbit_host:   'api2.vagrant'
+nova::glance_api_servers:
+  - api2.vagrant:9292
+nova::memcached_servers:
+  - api2.vagrant
+nova::vncproxy::common::vncproxy_host:      '192.168.122.133'

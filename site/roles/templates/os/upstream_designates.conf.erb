@@ -1,0 +1,14 @@
+upstream designates_public {
+         server api1.p:9001;
+         server api2.p:9001;
+}
+
+upstream designates_internal {
+         server api1.p:9001;
+         server api2.p:9001;
+}
+
+upstream designates_admin {
+         server api1.p:9001;
+         server api2.p:9001;
+}
